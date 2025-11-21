@@ -1,25 +1,51 @@
+import React, { useState } from "react";
 import { useWeather } from "../hooks/useWeather";
 
-const Home = () => {
-    const { data, loading, error } = useWeather({
-        date: "20250120",
-        nx: 61,
-        ny: 126,
-    });
+export default function HomePage() {
+    const [selectedDate, setSelectedDate] = useState("20251121");
+    const [nx] = useState(61);
+    const [ny] = useState(126);
+
+    const { weather, loading, error } = useWeather(selectedDate, nx, ny);
+
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const date = e.target.value.replaceAll("-", "");
+        setSelectedDate(date);
+    };
 
     return (
         <div className="p-4">
-            {loading && <p>로딩 중...</p>}
-            {error && <p className="text-red-500">{error}</p>}
+            <h1 className="text-3xl font-bold mb-4">홈</h1>
 
-            {data && (
+            <div className="mb-4">
+                <label className="mr-2">날짜 선택:</label>
+                <input
+                    type="date"
+                    value={`${selectedDate.slice(0, 4)}-${selectedDate.slice(
+                        4,
+                        6
+                    )}-${selectedDate.slice(6, 8)}`}
+                    onChange={handleDateChange}
+                    className="border p-1 rounded"
+                />
+            </div>
+
+            {loading && <div>로딩중...</div>}
+            {error && <div className="text-red-600">{error}</div>}
+
+            {!loading && !error && weather.length > 0 && (
                 <div>
-                    <p>기온: {data.temperature}°C</p>
-                    <p>하늘: {data.sky}</p>
-                    <p>강수유형: {data.rainType}</p>
+                    <h2 className="text-2xl font-bold mb-2">날씨 정보</h2>
+                    <ul>
+                        {weather.map((item, idx) => (
+                            <li key={idx}>
+                                {item.fcstDate} {item.fcstTime} -{" "}
+                                {item.category}: {item.fcstValue}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             )}
         </div>
     );
-};
-export default Home;
+}
