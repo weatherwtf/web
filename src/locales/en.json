@@ -1,0 +1,11 @@
+{
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "logout": "Logout",
+    "selectDate": "Select Date",
+    "weather": "Weather Info",
+    "comment": "Comments",
+    "addComment": "Add Comment"
+}
